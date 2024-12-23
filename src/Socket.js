@@ -2,9 +2,8 @@ import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import { useChat } from './contextApi/ChatContext';
-// import beepSound from "./assets/ping-82822.mp3"
 
-const URL = process.env.REACT_APP_BASE_URL
+const URL = process.env.REACT_APP_BASE_URL;
 
 export const socket = io(URL, {
     autoConnect: false,
@@ -12,12 +11,32 @@ export const socket = io(URL, {
 });
 
 const Socket = () => {
-    const { setUserId, setIsConnected, setMessages, setOnlineUsers, receiver, setReceiver, setIsSearching, setIsTyping, setMessage, setIsSending } = useChat()
+    const { 
+        setUserId, 
+        setIsConnected, 
+        setMessages, 
+        setOnlineUsers, 
+        setReceiver, 
+        setIsSearching, 
+        setIsTyping, 
+        setMessage, 
+        setIsSending 
+    } = useChat();
+
+    const resetChatState = () => {
+        setReceiver("");
+        setMessage("");
+        setIsTyping(false);
+        setIsSearching(false);
+        setMessages([]);
+    };
 
     useEffect(() => {
         socket.connect();
         console.log("socket connected");
+        
         return () => {
+            socket.emit("offline");
             socket.disconnect();
             console.log("socket disconnected");
         };
@@ -30,6 +49,7 @@ const Socket = () => {
 
         function onDisconnect() {
             setIsConnected(false);
+            resetChatState();
         }
 
         socket.on("connect", onConnect);
@@ -43,7 +63,8 @@ const Socket = () => {
 
     useEffect(() => {
         const uniqueId = uuidv4();
-        setUserId(uniqueId)
+        setUserId(uniqueId);
+        
         socket.emit("new-online-user", uniqueId, (error) => {
             if (error) {
                 return alert(error);
@@ -59,7 +80,7 @@ const Socket = () => {
                 ...previous,
                 { stranger: message },
             ]);
-            setIsTyping(false)
+            setIsTyping(false);
         });
 
         socket.on("receive-message", (message) => {
@@ -67,37 +88,78 @@ const Socket = () => {
                 ...previous,
                 { you: message },
             ]);
-            setIsSending(false)
+            setIsSending(false);
         });
 
         socket.on("user-paired", (receiver) => {
-            setReceiver(receiver)
-            // const audio = new Audio(beepSound);
-            // audio.play();
-            setIsSearching(false)
-        })
+            setReceiver(receiver);
+            setIsSearching(false);
+        });
 
         socket.on("chat-close", () => {
-            setReceiver("")
-            setMessage("")
-            setIsTyping(false)
-        })
+            resetChatState();
+        });
+
+        socket.on("user-disconnected", (data) => {
+            console.log(`${data.userId} has disconnected`);
+            resetChatState();
+            // Optionally show a notification to the user
+            alert(data.message);
+        });
 
         socket.on("typing", () => {
-            setIsTyping(true)
-        })
+            setIsTyping(true);
+        });
 
         socket.on("typing stop", () => {
-            setIsTyping(false)
-        })
+            setIsTyping(false);
+        });
+
+        // Handle window/tab close
+        const handleBeforeUnload = () => {
+            socket.emit("screen-off");
+        };
+
+        window.addEventListener('beforeunload', handleBeforeUnload);
 
         return () => {
             socket.off("get-online-users");
             socket.off("send-message");
-            socket.off("new-online-user");
-            socket.off("user-paired")
+            socket.off("receive-message");
+            socket.off("user-paired");
+            socket.off("chat-close");
+            socket.off("user-disconnected");
+            socket.off("typing");
+            socket.off("typing stop");
+            window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, []);
-}
 
-export default Socket
+    // Handle visibility change (tab switching)
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                socket.emit("screen-off");
+            } else {
+                // Reconnect logic if needed
+                const uniqueId = uuidv4();
+                setUserId(uniqueId);
+                socket.emit("new-online-user", uniqueId, (error) => {
+                    if (error) {
+                        console.error(error);
+                    }
+                });
+            }
+        };
+
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, []);
+
+    return null;
+};
+
+export default Socket;
