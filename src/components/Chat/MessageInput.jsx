@@ -76,11 +76,11 @@ const MessageInput = () => {
     }, [])
 
     return (
-        <div className="p-4 border-t dark:border-gray-800 bg-white dark:bg-gray-900">
+        <div className="p-4 border-t dark:border-[#1E1E1E] bg-white dark:bg-[#121212] transition-colors duration-200">
             <div className="flex gap-2 max-w-4xl mx-auto">
                 <Button
                     variant={receiver || isSearching ? "destructive" : "default"}
-                    className="w-24"
+                    className="w-24 dark:bg-opacity-90 dark:hover:bg-opacity-100"
                     onClick={receiver || isSearching ? disconnectChat : newChat}
                     disabled={isSearching && !receiver}
                 >
@@ -100,7 +100,7 @@ const MessageInput = () => {
                 <Input
                     type="text"
                     placeholder="Type your message..."
-                    className="flex-1"
+                    className="flex-1 dark:bg-[#1E1E1E] dark:text-gray-100 dark:border-[#2D2D2D] dark:placeholder-gray-400 dark:focus:border-gray-500"
                     onChange={(e) => {
                         setMessage(e.target.value)
                         typingHandle(e)
@@ -111,7 +111,7 @@ const MessageInput = () => {
                 />
 
                 <Button
-                    className="w-24"
+                    className="w-24 dark:bg-opacity-90 dark:hover:bg-opacity-100"
                     onClick={sendMessage}
                     disabled={!receiver || isSending}
                 >

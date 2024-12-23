@@ -9,7 +9,7 @@ import { ThemeProvider } from './components/ThemeProvider';
 function App() {
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-200">
+      <div className="min-h-screen bg-white dark:bg-[#121212] text-gray-800 dark:text-gray-100 transition-colors duration-200">
         <BrowserRouter>
           <Socket />
           <Header />
