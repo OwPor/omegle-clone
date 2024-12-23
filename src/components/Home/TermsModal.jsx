@@ -23,8 +23,7 @@ const TermsModal = ({ setIsTermsModal }) => {
                         <input className='modalInput' type="checkbox" checked={check1} onChange={() => setCheck1(!check1)} />
                     </span>
                     <CheckBoxLabel className='modalText'>
-                        <strong>
-                            OUR AGE RESTRICTIONS HAVE CHANGED.YOU MUST BE 18 OR OLDER TO USE OMEGLE.</strong>Persons under the age of 18 <strong>may not</strong> use Omegle.See our updated <Link>Terms of Service</Link> for more info.<strong>By checking the box you acknowledge and represent that you comply with these age restrictions.</strong>
+                        <strong>YOU MUST BE 18 OR OLDER TO USE OMEGLE. </strong>People under the age of 18 <strong>may not</strong> use Omegle. See our updated <Link>Terms of Service</Link> for more info.<strong>By checking the box you acknowledge and represent that you comply with these age restrictions.</strong>
                     </CheckBoxLabel>
                 </InputWrapper>
                 <InputWrapper style={{ marginTop: "15px" }}>

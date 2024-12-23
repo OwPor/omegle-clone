@@ -1,17 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
-import usaFlag from "../../assets/usaFlag.jpg";
+// import usaFlag from "../../assets/usaFlag.jpg";
 
 const HomeDesktop = ({ setIsTermsModal }) => {
     return (
         <DesktopHome className='homeDesktop'>
             <NoAppNeedText>You don't need an app to use Omegle on your phone or tablet! The web site works great on mobile.
             </NoAppNeedText>
-            <ImageWrapper>
+            {/* <ImageWrapper>
                 <Image src={usaFlag} alt="USA Flag" />
-            </ImageWrapper>
+            </ImageWrapper> */}
 
-            <AboutOmegleText>
+            {/* <AboutOmegleText>
                 Omegle (oh-meg-ull) is a great way to meet new friends. When you use Omegle, we pick someone else at random and let you talk one-on-one. To help you stay safe, chats are anonymous unless you tell someone who you are (not suggested!), and you can stop a chat at any time. Predators have been known to use Omegle, so please be careful.
             </AboutOmegleText>
             <SameInteretsText>
@@ -19,10 +19,10 @@ const HomeDesktop = ({ setIsTermsModal }) => {
             </SameInteretsText>
 
             <AgeLimitText>By using Omegle, you accept the terms at the bottom.You must be 18 + or 13 + with parental permission.
-            </AgeLimitText>
+            </AgeLimitText> */}
 
             <VideoMonitoringBox>
-                <VideoMonitoringText>Video is monitored.Keep it clean!
+                <VideoMonitoringText>Video is monitored. Keep it clean!
                 </VideoMonitoringText>
                 <UnmoderatedSection>
                     <AgeText>18+:</AgeText>
@@ -31,10 +31,10 @@ const HomeDesktop = ({ setIsTermsModal }) => {
             </VideoMonitoringBox>
 
             <HomeBottom>
-                <div>
+                {/* <div>
                     <InputLabel>What do you wanna talk about?</InputLabel>
                     <Input type='text' placeholder='Add your interests(optional)' disabled />
-                </div>
+                </div> */}
 
                 <div>
                     <ButtonsLabel>Start Chating:</ButtonsLabel>
@@ -46,10 +46,10 @@ const HomeDesktop = ({ setIsTermsModal }) => {
                 </div>
             </HomeBottom>
 
-            <CollegeStudentBox>
+            {/* <CollegeStudentBox>
                 <PlayIcon>▶️</PlayIcon>
                 <p><strong>College student</strong> chat</p>
-            </CollegeStudentBox>
+            </CollegeStudentBox> */}
         </DesktopHome >
     )
 }
@@ -72,36 +72,36 @@ const NoAppNeedText = styled.p({
     fontWeight: "600"
 })
 
-const ImageWrapper = styled.div({
-    display: "flex",
-    justifyContent: "center"
-})
+// const ImageWrapper = styled.div({
+//     display: "flex",
+//     justifyContent: "center"
+// })
 
-const Image = styled.img({
-    height: "170px",
-    width: "350px",
-    margin: "20px 0",
-    background: "rgba(0, 0, 1, 0.01)",
-    objectFit: "cover"
-})
+// const Image = styled.img({
+//     height: "170px",
+//     width: "350px",
+//     margin: "20px 0",
+//     background: "rgba(0, 0, 1, 0.01)",
+//     objectFit: "cover"
+// })
 
-const AboutOmegleText = styled.p({
-    fontSize: "16px",
-    lineHeight: "24px"
-})
+// const AboutOmegleText = styled.p({
+//     fontSize: "16px",
+//     lineHeight: "24px"
+// })
 
-const SameInteretsText = styled.p({
-    fontSize: "16px",
-    lineHeight: "24px",
-    marginTop: "10px"
-})
+// const SameInteretsText = styled.p({
+//     fontSize: "16px",
+//     lineHeight: "24px",
+//     marginTop: "10px"
+// })
 
-const AgeLimitText = styled.p({
-    fontSize: "11px",
-    textAlign: "center",
-    fontWeight: "500",
-    marginTop: "15px"
-})
+// const AgeLimitText = styled.p({
+//     fontSize: "11px",
+//     textAlign: "center",
+//     fontWeight: "500",
+//     marginTop: "15px"
+// })
 
 const VideoMonitoringBox = styled.div({
     width: "fit-content",
@@ -127,36 +127,36 @@ const UnmoderatedSection = styled.div({
 })
 
 const AgeText = styled.strong({
-    fontSize: "12px"
+    fontSize: "14px"
 })
 
 const UnmoderatedSectionText = styled.p({
-    color: "blue",
-    fontSize: "12px",
-    textDecoration: "underline"
+    color: "red",
+    fontSize: "14px",
+    textDecoration: "none"
 })
 
 const HomeBottom = styled.div({
     marginBottom: "10px",
     display: 'flex',
-    justifyContent: "space-between"
+    justifyContent: "center"
 })
 
-const InputLabel = styled.div({
-    marginBottom: "5px",
-    textAlign: "center",
-    fontSize: "18px"
-})
+// const InputLabel = styled.div({
+//     marginBottom: "5px",
+//     textAlign: "center",
+//     fontSize: "18px"
+// })
 
-const Input = styled.input({
-    textAlign: "center",
-    fontSize: "19px",
-    padding: "14px",
-    width: "330px",
-    border: "1px solid #CCC",
-    borderRadius: "2px",
-    cursor: "not-allowed"
-})
+// const Input = styled.input({
+//     textAlign: "center",
+//     fontSize: "19px",
+//     padding: "14px",
+//     width: "330px",
+//     border: "1px solid #CCC",
+//     borderRadius: "2px",
+//     cursor: "not-allowed"
+// })
 
 const ButtonsLabel = styled.p({
     marginBottom: "5px",
@@ -180,19 +180,19 @@ const Button = styled.button({
     borderRadius: "4px"
 })
 
-const CollegeStudentBox = styled.div({
-    padding: "8px",
-    width: "330px",
-    background: "rgb(238, 238, 238)",
-    border: "1px solid rgb(204, 204, 204)",
-    borderRadius: "8px",
-    display: "flex",
-    justifyContent: "space-around",
-    position: "relative"
-})
+// const CollegeStudentBox = styled.div({
+//     padding: "8px",
+//     width: "330px",
+//     background: "rgb(238, 238, 238)",
+//     border: "1px solid rgb(204, 204, 204)",
+//     borderRadius: "8px",
+//     display: "flex",
+//     justifyContent: "space-around",
+//     position: "relative"
+// })
 
-const PlayIcon = styled.p({
-    position: "absolute",
-    left: "20px",
-    top: "2px"
-})
+// const PlayIcon = styled.p({
+//     position: "absolute",
+//     left: "20px",
+//     top: "2px"
+// })

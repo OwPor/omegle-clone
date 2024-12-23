@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
 import OmegleLogo from "../assets/Omegle2.png"
-import { FaFacebookF, FaTwitter } from "react-icons/fa6"
-import { FcGoogle } from "react-icons/fc"
-import { FaSortDown } from "react-icons/fa"
+// import { FaFacebookF, FaTwitter } from "react-icons/fa6"
+// import { FcGoogle } from "react-icons/fc"
+// import { FaSortDown } from "react-icons/fa"
 import { useChat } from '../contextApi/ChatContext'
 import styled from 'styled-components'
 
@@ -22,13 +22,15 @@ const Header = () => {
     return (
         <HeaderContainer className="header">
             <LogoWrapper className='logoWrapper'>
-                <Image src={OmegleLogo} alt="Omegle Logo" />
+                <a href='/'>
+                    <Image src={OmegleLogo} alt="Omegle Logo" />
+                </a>
 
                 <HeaderText className='rotatedText'>Talk to strangers!</HeaderText>
             </LogoWrapper>
 
             <HeaderRight className="headerRight">
-                <ButtonsGroup>
+                {/* <ButtonsGroup>
                     <Button style={{ background: "#4A549A" }}><FaFacebookF />
                         Share</Button>
                     <Button style={{ background: "#728EC5" }}><FaTwitter />
@@ -38,7 +40,7 @@ const Header = () => {
                         Choose a language
                         <FaSortDown />
                     </SelectButton>
-                </ButtonsGroup>
+                </ButtonsGroup> */}
                 <LiveUsersWrapper>
                     <LiveUsersNumber>{onlineUsers.length} +</LiveUsersNumber>
                     <LiveUsersText>Live users</LiveUsersText>

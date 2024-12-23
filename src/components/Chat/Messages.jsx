@@ -63,7 +63,7 @@ const Messages = () => {
                 </>
             )}
 
-            {receiver && <p className='connectedText'>You’re now chatting with a random stranger. Say Stand WITH THE CHINESE PEOPLE AGAINST THE CCP!</p>}
+            {receiver && <p className='connectedText'>You’re now chatting with a random stranger.</p>}
             {messages.map((message, index) => (
                 <div key={index} className={message?.stranger ? "strangerWrapper" : "youWrapper"}>
                     <MessageBox className={message?.stranger ? "strangerBox" : "youBox"}>
