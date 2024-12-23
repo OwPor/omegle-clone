@@ -67,7 +67,7 @@ const Socket = () => {
         
         socket.emit("new-online-user", uniqueId, (error) => {
             if (error) {
-                return alert(error);
+                return console.log(error);
             }
         });
 
@@ -104,7 +104,7 @@ const Socket = () => {
             console.log(`${data.userId} has disconnected`);
             resetChatState();
             // Optionally show a notification to the user
-            alert(data.message);
+            // alert(data.message);
         });
 
         socket.on("typing", () => {
