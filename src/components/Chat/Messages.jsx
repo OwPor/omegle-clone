@@ -3,7 +3,6 @@ import { useChat } from '../../contextApi/ChatContext'
 import { socket } from '../../Socket'
 import html2canvas from 'html2canvas'
 import { Button } from "../ui/button"
-import { Checkbox } from "../ui/checkbox"
 import { ScrollArea } from "../ui/scroll-area"
 import { Loader2 } from "lucide-react"
 
@@ -103,16 +102,6 @@ const Messages = () => {
                     </p>
                     
                     <div className="space-y-4">
-                        <div className="flex items-center justify-center space-x-2">
-                            <Checkbox id="interests" />
-                            <label htmlFor="interests" className="text-sm">
-                                Find strangers with common interests
-                            </label>
-                            <Button variant="link" className="text-sm">
-                                Settings
-                            </Button>
-                        </div>
-
                         <div className="flex flex-col md:flex-row items-center justify-center gap-2">
                             <Button onClick={newChat}>
                                 Start a new conversation
