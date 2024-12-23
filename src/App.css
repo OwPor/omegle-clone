@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .header {
   box-shadow: 0 0.25em 0.75em #CCC;
   -moz-box-shadow: 0 .25em .75em #CCC;

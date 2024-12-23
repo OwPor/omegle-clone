@@ -1,11 +1,27 @@
 import React, { useEffect } from 'react'
-import { useChat } from '../../contextApi/ChatContext';
-import { socket } from '../../Socket';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useChat } from '../../contextApi/ChatContext'
+import { socket } from '../../Socket'
+import { useNavigate } from 'react-router-dom'
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Send, StopCircle, Plus } from "lucide-react"
 
 const MessageInput = () => {
-    const { userId, onlineUsers, isSearching, setIsSearching, receiver, setReceiver, setMessages, isSending, setIsSending, message, setMessage, setIsTyping } = useChat()
+    const { 
+        userId, 
+        onlineUsers, 
+        isSearching, 
+        setIsSearching, 
+        receiver, 
+        setReceiver, 
+        setMessages, 
+        isSending, 
+        setIsSending, 
+        message, 
+        setMessage, 
+        setIsTyping 
+    } = useChat()
+    const navigate = useNavigate()
 
     const newChat = () => {
         setIsSearching(true)
@@ -13,14 +29,10 @@ const MessageInput = () => {
         socket.emit("pairing-user", userId, (error) => {
             return
         })
-        return () => {
-            socket.off("pairing-user");
-        };
     }
 
     const sendMessage = () => {
-        if (isSending) return
-        if (message === "") return
+        if (isSending || message === "") return
         setIsSending(true)
         socket.emit("send-message", receiver, message, () => {
             setMessage("")
@@ -55,66 +67,60 @@ const MessageInput = () => {
         }
     }
 
-    const navigate = useNavigate()
-
     useEffect(() => {
         if (userId && onlineUsers.find((user) => user.userId === userId)) {
             newChat()
         } else {
             navigate("/")
         }
-    }, []);
+    }, [])
 
     return (
-        <InputWrapper className='messageInputWrapper'>
-            {receiver || isSearching ?
-                <Button className="stopBtn" onClick={disconnectChat}>
-                    Stop
-                </Button> :
-                <Button className="newBtn" onClick={newChat} disabled={isSearching}>
-                    New
+        <div className="p-4 border-t dark:border-gray-800 bg-white dark:bg-gray-900">
+            <div className="flex gap-2 max-w-4xl mx-auto">
+                <Button
+                    variant={receiver || isSearching ? "destructive" : "default"}
+                    className="w-24"
+                    onClick={receiver || isSearching ? disconnectChat : newChat}
+                    disabled={isSearching && !receiver}
+                >
+                    {receiver || isSearching ? (
+                        <>
+                            <StopCircle className="w-4 h-4 mr-2" />
+                            Stop
+                        </>
+                    ) : (
+                        <>
+                            <Plus className="w-4 h-4 mr-2" />
+                            New
+                        </>
+                    )}
                 </Button>
-            }
-            <Input type='text' placeholder='Type  your message...' className='inputBox' onChange={(e) => {
-                setMessage(e.target.value)
-                typingHandle(e)
-            }} value={message} onKeyDown={(e) => handleKeyPress(e)} disabled={!receiver} />
-            <SendButton className='sendBtn' onClick={sendMessage}
-                disabled={!receiver || isSending}>
-                Send
-            </SendButton>
-        </InputWrapper>
+
+                <Input
+                    type="text"
+                    placeholder="Type your message..."
+                    className="flex-1"
+                    onChange={(e) => {
+                        setMessage(e.target.value)
+                        typingHandle(e)
+                    }}
+                    value={message}
+                    onKeyDown={handleKeyPress}
+                    disabled={!receiver}
+                />
+
+                <Button
+                    className="w-24"
+                    onClick={sendMessage}
+                    disabled={!receiver || isSending}
+                >
+                    <Send className="w-4 h-4 mr-2" />
+                    Send
+                </Button>
+            </div>
+        </div>
     )
 }
 
 export default MessageInput
-
-const InputWrapper = styled.div({
-    display: 'flex',
-    gap: "5px"
-})
-
-const Button = styled.button({
-    fontSize: "20px",
-    fontWeight: "500",
-    minWidth: "fit-content",
-    width: "7%",
-    padding: "16px",
-    border: "1px solid #CCC",
-    borderRadius: "2px"
-})
-
-const Input = styled.input({
-    fontSize: "18px",
-    padding: "16px",
-    width: "80%",
-    borderRadius: "2px"
-})
-
-const SendButton = styled.button({
-    fontSize: '20px',
-    width: "7%",
-    padding: "16px",
-    border: "1px solid #b3aeae",
-    borderRadius: "2px"
-})

@@ -1,124 +1,51 @@
-import React, { useEffect } from 'react'
-import OmegleLogo from "../assets/Omegle2.png"
-// import { FaFacebookF, FaTwitter } from "react-icons/fa6"
-// import { FcGoogle } from "react-icons/fc"
-// import { FaSortDown } from "react-icons/fa"
+import React, { useState } from 'react'
+import { Moon, Sun } from 'lucide-react'
+import { Button } from "../components/ui/button"
 import { useChat } from '../contextApi/ChatContext'
-import styled from 'styled-components'
+import OmegleLogo from "../assets/Omegle2.png"
 
 const Header = () => {
+    const [isDark, setIsDark] = useState(false);
+    const { onlineUsers } = useChat();
 
-    const { onlineUsers, receiver, setIsTyping, setMessage, setReceiver } = useChat()
-
-    useEffect(() => {
-        console.log(receiver)
-        if (receiver !== undefined && !onlineUsers.find((user) => user.userId === receiver)) {
-            setIsTyping(false)
-            setMessage("")
-            setReceiver("")
-        }
-    }, [onlineUsers]);
+    const toggleTheme = () => {
+        setIsDark(!isDark);
+        document.documentElement.classList.toggle('dark');
+    };
 
     return (
-        <HeaderContainer className="header">
-            <LogoWrapper className='logoWrapper'>
-                <a href='/'>
-                    <Image src={OmegleLogo} alt="Omegle Logo" />
-                </a>
+        <header className="sticky top-0 z-50 w-full border-b bg-white dark:bg-gray-900">
+            <div className="container mx-auto px-4 flex h-14 items-center justify-between">
+                <div className="flex items-center gap-6">
+                    <a href="/" className="flex items-center space-x-2">
+                        <img src={OmegleLogo} alt="Omegle Logo" className="h-12" />
+                    </a>
+                    <p className="hidden md:block text-2xl font-bold -rotate-3 dark:text-white">
+                        Talk to strangers!
+                    </p>
+                </div>
 
-                <HeaderText className='rotatedText'>Talk to strangers!</HeaderText>
-            </LogoWrapper>
+                <div className="flex items-center gap-4">
+                    <Button
+                        onClick={toggleTheme}
+                        className="p-2 rounded-md"
+                    >
+                        {isDark ? 
+                            <Sun className="h-5 w-5" /> : 
+                            <Moon className="h-5 w-5" />
+                        }
+                    </Button>
 
-            <HeaderRight className="headerRight">
-                {/* <ButtonsGroup>
-                    <Button style={{ background: "#4A549A" }}><FaFacebookF />
-                        Share</Button>
-                    <Button style={{ background: "#728EC5" }}><FaTwitter />
-                        Tweet</Button>
-                    <SelectButton>
-                        <FcGoogle />
-                        Choose a language
-                        <FaSortDown />
-                    </SelectButton>
-                </ButtonsGroup> */}
-                <LiveUsersWrapper>
-                    <LiveUsersNumber>{onlineUsers.length} +</LiveUsersNumber>
-                    <LiveUsersText>Live users</LiveUsersText>
-                </LiveUsersWrapper>
-            </HeaderRight>
-
-        </HeaderContainer >
+                    <div className="flex items-center gap-2">
+                        <span className="text-2xl font-bold text-blue-400">
+                            {onlineUsers.length}+
+                        </span>
+                        <span className="text-blue-300">Live users</span>
+                    </div>
+                </div>
+            </div>
+        </header>
     )
 }
 
 export default Header
-
-const HeaderContainer = styled.div({
-    padding: "10px 30px",
-    background: "white",
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center"
-})
-
-const LogoWrapper = styled.div({
-    display: "flex",
-    alignItems: "center",
-    gap: "50px"
-})
-
-const Image = styled.img({
-    height: "50px"
-})
-
-const HeaderText = styled.p({
-    fontSize: "27px",
-    fontWeight: "700",
-    rotate: "-4deg"
-})
-
-const HeaderRight = styled.div({
-    flexDirection: "column",
-    alignItems: "end"
-})
-
-const ButtonsGroup = styled.div({
-    display: "flex",
-    gap: "10px"
-})
-
-const Button = styled.button({
-    fontSize: "10px",
-    color: "white",
-    background: "#4A549A",
-    border: "none",
-    borderRadius: "2px",
-    display: "flex",
-    gap: "5px",
-    alignItems: "center"
-})
-
-const SelectButton = styled.button({
-    padding: "2px 10px",
-    border: "1px solid gray",
-    borderRadius: "2px",
-    display: "flex",
-    alignItems: "center",
-    gap: "5px"
-})
-
-const LiveUsersWrapper = styled.div({
-    marginTop: "5px",
-    display: 'flex',
-    gap: "5px",
-    alignItems: "center"
-})
-
-const LiveUsersNumber = styled.p({
-    fontSize: "25px",
-    color: "#9DB2D7"
-})
-
-const LiveUsersText = styled.p({
-    color: "#b6d1f0"
-})

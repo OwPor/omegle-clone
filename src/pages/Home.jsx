@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import TermsModal from '../components/Home/TermsModal';
+import React, { useEffect } from 'react';
 import HomeDesktop from '../components/Home/HomeDesktop';
 import HomeMobile from '../components/Home/HomeMobile';
 import { socket } from '../Socket';
@@ -7,7 +6,6 @@ import { useChat } from '../contextApi/ChatContext';
 
 const Home = () => {
     const { userId, receiver, isSearching, setReceiver, setIsTyping, setMessage, setIsSearching } = useChat()
-    const [isTermsModal, setIsTermsModal] = useState(false);
 
     useEffect(() => {
         if (userId && isSearching) {
@@ -27,15 +25,13 @@ const Home = () => {
 
     return (
         <>
-            <HomeDesktop setIsTermsModal={setIsTermsModal} />
+            <div className="flex items-center justify-center min-h-[calc(100vh-3.5rem)]">
+                <HomeDesktop />
+            </div>
             {/* mobile */}
-            <HomeMobile setIsTermsModal={setIsTermsModal} />
-
-            {isTermsModal && <TermsModal setIsTermsModal={setIsTermsModal} />}
-
+            {/* <HomeMobile /> */}
         </>
     )
 }
 
 export default Home
-

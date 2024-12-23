@@ -1,171 +1,136 @@
 import React, { useEffect, useRef } from 'react'
 import { useChat } from '../../contextApi/ChatContext'
 import { socket } from '../../Socket'
-import html2canvas from 'html2canvas';
-import styled from 'styled-components';
+import html2canvas from 'html2canvas'
+import { Button } from "../ui/button"
+import { Checkbox } from "../ui/checkbox"
+import { ScrollArea } from "../ui/scroll-area"
+import { Loader2 } from "lucide-react"
 
 const Messages = () => {
-    const { userId, isSearching, setIsSearching, receiver, messages, setMessages, isTyping, message } = useChat()
+    const { userId, isSearching, setIsSearching, receiver, messages, setMessages, isTyping } = useChat()
+    const messagesRef = useRef()
 
     const newChat = () => {
         setIsSearching(true)
         setMessages([])
         socket.emit("pairing-user", userId, (error) => {
-            if (error) {
-                return alert(error);
-            }
+            if (error) return alert(error)
         })
-        return () => {
-            socket.off("pairing-user");
-        };
     }
 
     const takeScreenshot = () => {
-        const element = document.getElementById('savedchat'); // Replace 'elementToCapture' with the ID of the element you want to capture
-
+        const element = document.getElementById('savedchat')
         html2canvas(element).then((canvas) => {
-            const screenshot = canvas.toDataURL('image/png');
-            const downloadLink = document.createElement('a');
-
-            // Set the href attribute with the data URL
-            downloadLink.href = screenshot;
-
-            // Set the download attribute with a desired file name
-            downloadLink.download = 'screenshot.png';
-
-            // Append the link to the body
-            document.body.appendChild(downloadLink);
-
-            // Trigger a click on the link to initiate the download
-            downloadLink.click();
-
-            // Remove the link from the body after download
-            document.body.removeChild(downloadLink);
-            // Now you can save or display the screenshot as needed
-        });
-    };
-
-    const messagesRef = useRef()
+            const screenshot = canvas.toDataURL('image/png')
+            const downloadLink = document.createElement('a')
+            downloadLink.href = screenshot
+            downloadLink.download = 'omegle-chat.png'
+            document.body.appendChild(downloadLink)
+            downloadLink.click()
+            document.body.removeChild(downloadLink)
+        })
+    }
 
     useEffect(() => {
         if (messagesRef.current) {
-            messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+            messagesRef.current.scrollTop = messagesRef.current.scrollHeight
         }
-    }, [messages]);
-
+    }, [messages])
 
     return (
-        <MessagesContainer id='savedchat' className='messagesContainer' ref={messagesRef}>
+        <ScrollArea 
+            id='savedchat' 
+            className="h-[70vh] p-4" 
+            ref={messagesRef}
+        >
             {!isSearching && !receiver && receiver !== "" && (
-                <>
-                    <WelcomeText className='welcomeText'>Omegle : talk to strangers</WelcomeText>
-                    <StartButton className='startBtnSmall' onClick={newChat}>Start a new conversation</StartButton>
-                </>
+                <div className="space-y-4 text-center">
+                    <h2 className="text-2xl font-bold">Omegle: talk to strangers</h2>
+                    <Button onClick={newChat}>Start a new conversation</Button>
+                </div>
             )}
 
-            {receiver && <p className='connectedText'>You’re now chatting with a random stranger.</p>}
-            {messages.map((message, index) => (
-                <div key={index} className={message?.stranger ? "strangerWrapper" : "youWrapper"}>
-                    <MessageBox className={message?.stranger ? "strangerBox" : "youBox"}>
-                        <p className='messageBy' style={{ color: message?.stranger ? "red" : "blue", fontWeight: "bold" }}>
-                            {message?.stranger ? "Stranger :" : "You :"}
-                        </p>
-                        <p>{message?.stranger ? message.stranger : message.you}</p>
-                    </MessageBox>
+            {receiver && (
+                <p className="text-center text-muted-foreground mb-4">
+                    You're now chatting with a random stranger.
+                </p>
+            )}
+
+            <div className="space-y-4">
+                {messages.map((message, index) => (
+                    <div key={index} 
+                        className={`flex ${message?.stranger ? "justify-start" : "justify-end"}`}
+                    >
+                        <div className={`max-w-[80%] rounded-lg p-3 ${
+                            message?.stranger 
+                                ? "bg-gray-100 dark:bg-gray-800" 
+                                : "bg-blue-100 dark:bg-blue-900"
+                        }`}>
+                            <p className={`font-bold ${
+                                message?.stranger ? "text-red-500" : "text-blue-500"
+                            }`}>
+                                {message?.stranger ? "Stranger:" : "You:"}
+                            </p>
+                            <p className="mt-1">{message?.stranger ? message.stranger : message.you}</p>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            {isTyping && (
+                <p className="text-muted-foreground italic mt-2">
+                    Stranger is typing...
+                </p>
+            )}
+
+            {isSearching && (
+                <div className="flex items-center justify-center gap-2 text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    <p className="hidden md:block">
+                        Looking for someone you can chat with...
+                    </p>
+                    <p className="md:hidden">
+                        Connecting to server...
+                    </p>
                 </div>
-            ))
-            }
+            )}
 
-            {isTyping && <TypingText>Stranger is typing...</TypingText>}
+            {!isSearching && !receiver && receiver === "" && (
+                <div className="space-y-6 mt-4">
+                    <p className="text-gray-500 font-medium text-center">
+                        Your conversational partner has disconnected
+                    </p>
+                    
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-center space-x-2">
+                            <Checkbox id="interests" />
+                            <label htmlFor="interests" className="text-sm">
+                                Find strangers with common interests
+                            </label>
+                            <Button variant="link" className="text-sm">
+                                Settings
+                            </Button>
+                        </div>
 
-            {isSearching && <p className='loadingText loadingTextMobile'>Connecting to server...</p>}
-            {isSearching && <p className='loadingText loadingTextDesktop'>Looking for someone you can chat with...</p>}
-            {
-                !isSearching && !receiver && receiver === "" &&
-                <>
-                    <StrangerDisconnected className='disconnectText disconnectedTextMobile'>Stranger has disconnected.</StrangerDisconnected>
-                    <StrangerDisconnectedDesktop className='disconnectText disconnectedTextDesktop'>Your conversational partner has disconnected</StrangerDisconnectedDesktop>
-                    <SaveLogWrapper className='disconnectText2 disconnectText2Mobile'>
-                        <CommonInterestsText style={{}}><span><input type={"checkbox"} /></span> Find strangers with common interests <Link>Settings</Link></CommonInterestsText>
-                        <SaveLogButton onClick={takeScreenshot}>Great chat? Save the log!</SaveLogButton>
-                    </SaveLogWrapper>
-
-                    <SaveLogoWrapperDesktop className='disconnectText2 disconnectText2Desktop'>
-                        <button onClick={newChat}>Start a new conversation</button>
-                        <p>or</p>
-                        <Link onClick={takeScreenshot}>save this log</Link>
-                        <p>or</p>
-                        <Link>send us feedback</Link>
-                    </SaveLogoWrapperDesktop>
-                </>
-            }
-        </MessagesContainer >
+                        <div className="flex flex-col md:flex-row items-center justify-center gap-2">
+                            <Button onClick={newChat}>
+                                Start a new conversation
+                            </Button>
+                            <span className="text-muted-foreground">or</span>
+                            <Button variant="outline" onClick={takeScreenshot}>
+                                Save this log
+                            </Button>
+                            <span className="text-muted-foreground">or</span>
+                            <Button variant="link">
+                                Send us feedback
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            )}
+        </ScrollArea>
     )
 }
 
 export default Messages
-
-const MessagesContainer = styled.div({
-    padding: "10px",
-    height: "71vh",
-    overflowY: "scroll"
-})
-
-const WelcomeText = styled.p({
-    marginBottom: "10px"
-})
-
-const StartButton = styled.button({
-    width: "fit-content"
-})
-
-const MessageBox = styled.div({
-    fontSize: "18px",
-    marginBottom: "10px",
-    display: "flex",
-    gap: "5px"
-})
-
-const TypingText = styled.p({
-    marginTop: "5px"
-})
-
-const StrangerDisconnected = styled.p({
-    color: 'gray',
-    fontWeight: "500",
-    margin: '15px 0 10px 0'
-})
-
-const StrangerDisconnectedDesktop = styled.p({
-    color: 'gray',
-    fontWeight: "500",
-    margin: '15px 0 10px 0'
-})
-
-const SaveLogWrapper = styled.div({
-    flexDirection: "column"
-})
-
-const CommonInterestsText = styled.p({
-    fontSize: "15px", textAlign: "center"
-})
-
-const Link = styled.span({
-    color: "blue",
-    textDecoration: "underline",
-    cursor: "pointer"
-})
-
-const SaveLogButton = styled.p({
-    fontSize: "14px",
-    fontWeight: "600",
-    padding: "10px",
-    marginTop: "8px",
-    background: "#ff8a29",
-    borderRadius: "3px",
-    cursor: "pointer"
-})
-
-const SaveLogoWrapperDesktop = styled.div({
-    gap: "5px"
-})
