@@ -1,26 +1,22 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Moon, Sun } from 'lucide-react'
 import { Button } from "../components/ui/button"
 import { useChat } from '../contextApi/ChatContext'
+import { useTheme } from '../components/ThemeProvider'
 import OmegleLogo from "../assets/Omegle2.png"
 
 const Header = () => {
-    const [isDark, setIsDark] = useState(false);
+    const { theme, toggleTheme } = useTheme();
     const { onlineUsers } = useChat();
 
-    const toggleTheme = () => {
-        setIsDark(!isDark);
-        document.documentElement.classList.toggle('dark');
-    };
-
     return (
-        <header className="sticky top-0 z-50 w-full border-b bg-white dark:bg-gray-900">
+        <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-[#1E1E1E] bg-white dark:bg-[#121212] transition-colors duration-200">
             <div className="container mx-auto px-4 flex h-14 items-center justify-between">
                 <div className="flex items-center gap-6">
                     <a href="/" className="flex items-center space-x-2">
                         <img src={OmegleLogo} alt="Omegle Logo" className="h-12" />
                     </a>
-                    <p className="hidden md:block text-2xl font-bold -rotate-3 dark:text-white">
+                    <p className="hidden md:block text-2xl font-bold -rotate-3 text-gray-800 dark:text-gray-100">
                         Talk to strangers!
                     </p>
                 </div>
@@ -28,19 +24,20 @@ const Header = () => {
                 <div className="flex items-center gap-4">
                     <Button
                         onClick={toggleTheme}
-                        className="p-2 rounded-md"
+                        className="p-2 rounded-md dark:bg-[#1E1E1E] dark:hover:bg-[#2D2D2D] transition-colors duration-200"
+                        variant="outline"
                     >
-                        {isDark ? 
+                        {theme === 'dark' ? 
                             <Sun className="h-5 w-5" /> : 
                             <Moon className="h-5 w-5" />
                         }
                     </Button>
 
                     <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-blue-400">
+                        <span className="text-2xl font-bold text-blue-400 dark:text-blue-300">
                             {onlineUsers.length}+
                         </span>
-                        <span className="text-blue-300">Live users</span>
+                        <span className="text-blue-300 dark:text-blue-200">Live users</span>
                     </div>
                 </div>
             </div>
