@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react'
 import { useChat } from '../../contextApi/ChatContext'
 import { socket } from '../../Socket'
-import html2canvas from 'html2canvas'
+// import html2canvas from 'html2canvas'
 import { Button } from "../ui/button"
 import { ScrollArea } from "../ui/scroll-area"
 import { Loader2 } from "lucide-react"
@@ -18,18 +18,37 @@ const Messages = () => {
         })
     }
 
-    const takeScreenshot = () => {
-        const element = document.getElementById('savedchat')
-        html2canvas(element).then((canvas) => {
-            const screenshot = canvas.toDataURL('image/png')
-            const downloadLink = document.createElement('a')
-            downloadLink.href = screenshot
-            downloadLink.download = 'omegle-chat.png'
-            document.body.appendChild(downloadLink)
-            downloadLink.click()
-            document.body.removeChild(downloadLink)
-        })
+    const saveChatAsTextFile = () => {
+        let chatContent = messages.map((message) => {
+            return message.stranger ? `Stranger: ${message.stranger}` : `You: ${message.you}`;
+        }).join('\n');
+    
+        const blob = new Blob([chatContent], { type: 'text/plain' });
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(blob);
+
+        const now = new Date(Date.now());
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+        const date = now.toLocaleString('en-GB', options).replace(/[/]/g, '-').replace(/[,]/g, '').replace(/ /g, '_');
+    
+        downloadLink.download = `owmegle-${date}.txt`;
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
     }
+
+    // const takeScreenshot = () => {
+    //     const element = document.getElementById('savedchat')
+    //     html2canvas(element).then((canvas) => {
+    //         const screenshot = canvas.toDataURL('image/png')
+    //         const downloadLink = document.createElement('a')
+    //         downloadLink.href = screenshot
+    //         downloadLink.download = 'omegle-chat.png'
+    //         document.body.appendChild(downloadLink)
+    //         downloadLink.click()
+    //         document.body.removeChild(downloadLink)
+    //     })
+    // }
 
     useEffect(() => {
         if (messagesRef.current) {
@@ -107,13 +126,16 @@ const Messages = () => {
                                 Start a new conversation
                             </Button>
                             <span className="text-muted-foreground">or</span>
-                            <Button variant="outline" onClick={takeScreenshot}>
+                            {/* <Button variant="outline" onClick={takeScreenshot}>
                                 Save this log
+                            </Button> */}
+                            <Button variant="outline" onClick={saveChatAsTextFile}>
+                                Save as text file
                             </Button>
-                            <span className="text-muted-foreground">or</span>
+                            {/* <span className="text-muted-foreground">or</span>
                             <Button variant="link">
                                 Send us feedback
-                            </Button>
+                            </Button> */}
                         </div>
                     </div>
                 </div>
