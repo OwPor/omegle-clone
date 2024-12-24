@@ -3,21 +3,24 @@ import { Moon, Sun } from 'lucide-react'
 import { Button } from "../components/ui/button"
 import { useChat } from '../contextApi/ChatContext'
 import { useTheme } from '../components/ThemeProvider'
-import OmegleLogo from "../assets/Omegle2.png"
+import OwmegleLogo from "../assets/Owmegle.png"
 
 const Header = () => {
     const { theme, toggleTheme } = useTheme();
     const { onlineUsers } = useChat();
 
     return (
-        <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-[#1E1E1E] bg-white dark:bg-[#121212] transition-colors duration-200">
+        <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-[#121212] transition-colors duration-200">
             <div className="container mx-auto px-4 flex h-14 items-center justify-between">
                 <div className="flex items-center gap-6">
-                    <a href="/" className="flex items-center space-x-2">
-                        <img src={OmegleLogo} alt="Omegle Logo" className="h-12" />
+                    <a href="/" className="flex items-center gap-2">
+                        <img src={OwmegleLogo} alt="Owmegle Logo" className="h-12" />
+                        <span className="text-2xl font-bold text-gray-800 dark:text-gray-100 transition-colors duration-200">
+                            Owmegle
+                        </span>
                     </a>
                     <p className="hidden md:block text-2xl font-bold -rotate-3 text-gray-800 dark:text-gray-100">
-                        Talk to strangers!
+                        Meet Someone New!
                     </p>
                 </div>
 
